@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brf Flemingsberg - Styrelse & Valberedning Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+
+    <!-- Header -->
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+                <div class="bg-emerald-600 text-white p-2.5 rounded-xl shadow-lg">
+                    <i class="fa-solid fa-building-shield text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">Brf Flemingsberg</h1>
+                    <p class="text-xs text-slate-400">Styrelse & Valberedning Hub • Sågstuvägen</p>
+                </div>
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="switchTab('candidates')" id="btn-candidates" class="px-4 py-2 rounded-lg text-sm font-medium bg-emerald-600 text-white transition shadow">
+                    <i class="fa-solid fa-users mr-1.5"></i> Kandidati
+                </button>
+                <button onclick="switchTab('tasks')" id="btn-tasks" class="px-4 py-2 rounded-lg text-sm font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 transition">
+                    <i class="fa-solid fa-list-check mr-1.5"></i> Zadaci / Rokovi
+                </button>
+                <button onclick="switchTab('notes')" id="btn-notes" class="px-4 py-2 rounded-lg text-sm font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 transition">
+                    <i class="fa-solid fa-note-sticky mr-1.5"></i> Bilješke & Sastanci
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+
+        <!-- TAB 1: KANDIDATI (Valberedning) -->
+        <div id="tab-candidates" class="space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-800 p-4 rounded-2xl border border-slate-700">
+                <div>
+                    <h2 class="text-lg font-semibold">Praćenje kandidata za styrelsen</h2>
+                    <p class="text-xs text-slate-400">Upravljanje kontaktima, razgovorima i statusom za predstojeću skupštinu.</p>
+                </div>
+                <button onclick="openModal('candidateModal')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition flex items-center shadow">
+                    <i class="fa-solid fa-user-plus mr-2"></i> Dodaj kandidata
+                </button>
+            </div>
+
+            <!-- Grid of Candidates -->
+            <div id="candidatesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dinamički se popunjava -->
+            </div>
+        </div>
+
+        <!-- TAB 2: ZADACI I ROKOVI (Tasks) -->
+        <div id="tab-tasks" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-800 p-4 rounded-2xl border border-slate-700">
+                <div>
+                    <h2 class="text-lg font-semibold">Zadaci, HSB konsultacije i obaveze</h2>
+                    <p class="text-xs text-slate-400">Pregled rokova za naknade, EV punjače, pregovore i administrativne zadatke.</p>
+                </div>
+                <button onclick="openModal('taskModal')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition flex items-center shadow">
+                    <i class="fa-solid fa-plus mr-2"></i> Novi zadatak
+                </button>
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow">
+                <div class="divide-y divide-slate-700" id="tasksList">
+                    <!-- Dinamički se popunjava -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: BILJEŠKE I SASTANCI (Notes) -->
+        <div id="tab-notes" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-800 p-4 rounded-2xl border border-slate-700">
+                <div>
+                    <h2 class="text-lg font-semibold">Bilješke sa sastanaka i razgovora</h2>
+                    <p class="text-xs text-slate-400">Zabilješke sa sastanaka valberedningen-a, dogovori sa Danielom, Janneom, Lottom i HSB-om.</p>
+                </div>
+                <button onclick="openModal('noteModal')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition flex items-center shadow">
+                    <i class="fa-solid fa-pen-to-square mr-2"></i> Nova bilješka
+                </button>
+            </div>
+
+            <div id="notesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dinamički se popunjava -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL: Dodaj kandidata -->
+    <div id="candidateModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-lg rounded-2xl p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold">Novi kandidat / Član</h3>
+                <button onclick="closeModal('candidateModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="candidateForm" onsubmit="saveCandidate(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Ime i prezime</label>
+                    <input type="text" id="candName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Uloga / Pozicija</label>
+                        <input type="text" id="candRole" placeholder="npr. Styrelseledamot / Suppleant" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Status razgovora</label>
+                        <select id="candStatus" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500">
+                            <option value="Kontaktiran">Kontaktiran</option>
+                            <option value="Pozitivan / Intervjuisan">Pozitivan / Intervjuisan</option>
+                            <option value="Prihvatio nominaciju">Prihvatio nominaciju</option>
+                            <option value="Odbio">Odbio</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Bilješke / Utisci sa razgovora</label>
+                    <textarea id="candNotes" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal('candidateModal')" class="px-4 py-2 rounded-xl text-sm bg-slate-700 hover:bg-slate-600 text-slate-300">Otkaži</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl text-sm bg-emerald-600 hover:bg-emerald-500 text-white font-medium">Sačuvaj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Dodaj zadatak -->
+    <div id="taskModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-lg rounded-2xl p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold">Novi zadatak ili rok</h3>
+                <button onclick="closeModal('taskModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="taskForm" onsubmit="saveTask(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Naziv zadatka</label>
+                    <input type="text" id="taskTitle" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Rok / Datum</label>
+                        <input type="date" id="taskDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Kategorija</label>
+                        <select id="taskCategory" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500">
+                            <option value="Valberedning">Valberedning</option>
+                            <option value="Styrelse / Garage">Styrelse / Garage & EV</option>
+                            <option value="HSB / Ekonomija">HSB / Ekonomija</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal('taskModal')" class="px-4 py-2 rounded-xl text-sm bg-slate-700 hover:bg-slate-600 text-slate-300">Otkaži</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl text-sm bg-emerald-600 hover:bg-emerald-500 text-white font-medium">Sačuvaj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Dodaj bilješku -->
+    <div id="noteModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-lg rounded-2xl p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold">Nova bilješka</h3>
+                <button onclick="closeModal('noteModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="noteForm" onsubmit="saveNote(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Naslov / Tema</label>
+                    <input type="text" id="noteTitle" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Sadržaj bilješke</label>
+                    <textarea id="noteContent" rows="4" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal('noteModal')" class="px-4 py-2 rounded-xl text-sm bg-slate-700 hover:bg-slate-600 text-slate-300">Otkaži</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl text-sm bg-emerald-600 hover:bg-emerald-500 text-white font-medium">Sačuvaj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Default podaci inicijalno popunjeni sa tvojim kontekstom (Brf Flemingsberg)
+        let data = {
+            candidates: JSON.parse(localStorage.getItem('brf_candidates')) || [
+                { id: 1, name: 'Kandidat 1 (Primer)', role: 'Styrelseledamot', status: 'Pozitivan / Intervjuisan', notes: 'Obavljen razgovor, zainteresovan za finansije.' }
+            ],
+            tasks: JSON.parse(localStorage.getItem('brf_tasks')) || [
+                { id: 1, title: 'Sastanak valberedningen sa HSB Södertörn', date: '2026-05-15', category: 'Valberedning', done: false },
+                { id: 2, title: 'Pregled zahtjeva za arrende / garazi i EV punjače', date: '2026-05-20', category: 'Styrelse / Garage', done: false }
+            ],
+            notes: JSON.parse(localStorage.getItem('brf_notes')) || [
+                { id: 1, title: 'Dogovor sa Janneom i Lottom', content: 'Koordinacija oko sastanka sa Nermin Josefson (HSB ekonomista) vezano za allowance i naknade.' }
+            ]
+        };
+
+        function saveData() {
+            localStorage.setItem('brf_candidates', JSON.stringify(data.candidates));
+            localStorage.setItem('brf_tasks', JSON.stringify(data.tasks));
+            localStorage.setItem('brf_notes', JSON.stringify(data.notes));
+            render();
+        }
+
+        function switchTab(tab) {
+            ['candidates', 'tasks', 'notes'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`btn-${t}`).classList.remove('bg-emerald-600', 'text-white');
+                document.getElementById(`btn-${t}`).classList.add('bg-slate-700', 'text-slate-300');
+            });
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            document.getElementById(`btn-${tab}`).classList.add('bg-emerald-600', 'text-white');
+            document.getElementById(`btn-${tab}`).classList.remove('bg-slate-700', 'text-slate-300');
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
+
+        function saveCandidate(e) {
+            e.preventDefault();
+            const newCand = {
+                id: Date.now(),
+                name: document.getElementById('candName').value,
+                role: document.getElementById('candRole').value,
+                status: document.getElementById('candStatus').value,
+                notes: document.getElementById('candNotes').value
+            };
+            data.candidates.push(newCand);
+            saveData();
+            closeModal('candidateModal');
+            document.getElementById('candidateForm').reset();
+        }
+
+        function deleteCandidate(id) {
+            data.candidates = data.candidates.filter(c => c.id !== id);
+            saveData();
+        }
+
+        function saveTask(e) {
+            e.preventDefault();
+            const newTask = {
+                id: Date.now(),
+                title: document.getElementById('taskTitle').value,
+                date: document.getElementById('taskDate').value,
+                category: document.getElementById('taskCategory').value,
+                done: false
+            };
+            data.tasks.push(newTask);
+            saveData();
+            closeModal('taskModal');
+            document.getElementById('taskForm').reset();
+        }
+
+        function toggleTask(id) {
+            const task = data.tasks.find(t => t.id === id);
+            if (task) task.done = !task.done;
+            saveData();
+        }
+
+        function deleteTask(id) {
+            data.tasks = data.tasks.filter(t => t.id !== id);
+            saveData();
+        }
+
+        function saveNote(e) {
+            e.preventDefault();
+            const newNote = {
+                id: Date.now(),
+                title: document.getElementById('noteTitle').value,
+                content: document.getElementById('noteContent').value
+            };
+            data.notes.push(newNote);
+            saveData();
+            closeModal('noteModal');
+            document.getElementById('noteForm').reset();
+        }
+
+        function deleteNote(id) {
+            data.notes = data.notes.filter(n => n.id !== id);
+            saveData();
+        }
+
+        function render() {
+            // Render Candidates
+            const candGrid = document.getElementById('candidatesGrid');
+            candGrid.innerHTML = data.candidates.map(c => `
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 flex flex-col justify-between shadow">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-slate-100">${c.name}</h3>
+                            <button onclick="deleteCandidate(${c.id})" class="text-slate-500 hover:text-red-400"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                        <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-700 text-emerald-400 mb-2">${c.role || 'Član'}</span>
+                        <p class="text-xs text-slate-300 font-medium mb-1"><i class="fa-solid fa-circle-info mr-1"></i> Status: <span class="text-amber-400">${c.status}</span></p>
+                        <p class="text-xs text-slate-400 mt-2 bg-slate-900/50 p-2 rounded-xl border border-slate-700/50">${c.notes || 'Nema dodatnih bilješki.'}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Tasks
+            const tasksList = document.getElementById('tasksList');
+            tasksList.innerHTML = data.tasks.map(t => `
+                <div class="p-4 flex items-center justify-between hover:bg-slate-750 transition">
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" ${t.done ? 'checked' : ''} onclick="toggleTask(${t.id})" class="w-5 h-5 rounded border-slate-700 bg-slate-900 text-emerald-600 focus:ring-0 cursor-pointer">
+                        <div>
+                            <p class="text-sm font-medium ${t.done ? 'line-through text-slate-500' : 'text-slate-200'}">${t.title}</p>
+                            <div class="flex items-center space-x-2 mt-1">
+                                <span class="text-xs text-slate-400"><i class="fa-regular fa-calendar mr-1"></i>${t.date}</span>
+                                <span class="text-xs px-2 py-0.5 rounded-md bg-slate-700 text-emerald-400">${t.category}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="deleteTask(${t.id})" class="text-slate-500 hover:text-red-400 p-2"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+            `).join('');
+
+            // Render Notes
+            const notesGrid = document.getElementById('notesGrid');
+            notesGrid.innerHTML = data.notes.map(n => `
+                <div class

@@ -3,7 +3,7 @@ document.getElementById('candidateForm').addEventListener('submit', function(eve
 event.preventDefault();
 const formData = new FormData(this);
 const data = Object.fromEntries(formData.entries());
-fetch('tvoj-link', {
+fetch https://formspree.io/f/xdeeqnna
 method: 'POST',
 headers: {
 'Content-Type': 'application/json',

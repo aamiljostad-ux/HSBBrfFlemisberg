@@ -315,42 +315,4 @@
                     <div class="flex items-center space-x-3">
                         <input type="checkbox" ${t.done ? 'checked' : ''} onclick="toggleTask(${t.id})" class="w-5 h-5 rounded border-slate-700 bg-slate-900 text-emerald-600 focus:ring-0 cursor-pointer">
                         <div>
-                            <p class="text-sm font-medium ${t.done ? 'line-through text-slate-500' : 'text-slate-200'}">${t.title}</p>
-                            <div class="flex items-center space-x-2 mt-1">
-                                <span class="text-xs text-slate-400"><i class="fa-regular fa-calendar mr-1"></i>${t.date}</span>
-                                <span class="text-xs px-2 py-0.5 rounded-md bg-slate-700 text-emerald-400">${t.category}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button onclick="deleteTask(${t.id})" class="text-slate-500 hover:text-red-400 p-2"><i class="fa-solid fa-trash-can"></i></button>
-                </div>
-            `).join('');
-
-
-            // Render Notes
-            const notesGrid = document.getElementById('notesGrid');
-            notesGrid.innerHTML = data.notes.map(n => `
-                <div class
-document.getElementById('candidateForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    const formData = new FormData(this);
-    const data = Object.fromEntries(formData.entries());
-    
-    fetch('tvoj-link', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-    .then(response => response.json())
-    .then(result => {
-        console.log('Success:', result);
-        alert('Kandidat uspešno dodat!');
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        alert('Došlo je do greške.');
-    });
-});
+                            <p class="text-sm font-medium ${t.done ? 'line-through text-slate-500' : 'text-slate-200'}">${t.title}<
